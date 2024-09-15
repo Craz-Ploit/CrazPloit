@@ -1,36 +1,42 @@
-local players = game.Players
-local localPlayer = players.LocalPlayer
+-- Get the local player
+local player = game.Players.LocalPlayer
 
--- Require DrawingLib
-local DrawingLib = require(game.ReplicatedStorage.DrawingLib)
-
-local function createSelectionBox(player)
-    -- Create a DrawingLib object
-    local drawing = DrawingLib.new()
-
-    -- Update the drawing function
-    local function updateDrawing()
-        -- Calculate the position of the player's torso relative to the screen
-        local screenPosition = game.Workspace.CurrentCamera:WorldToViewportPoint(player.Character.HumanoidRootPart.Position)
-
-        -- Draw the selection box
-        drawing:Clear()
-        drawing:Rectangle(screenPosition.X - 25, screenPosition.Y - 25, 50, 50, Color3.new(0, 1, 0)) -- Green color
-        drawing:Text(screenPosition.X + 25, screenPosition.Y + 25, player.Name, Color3.new(0, 0, 0)) -- Black text
+-- Create a function to find the closest player
+local function findClosestPlayer()
+    local closestPlayer = nil
+    local closestDistance = math.huge
+    for _, otherPlayer in pairs(game.Players:GetPlayers()) do
+        if otherPlayer ~= player then
+            local distance = (otherPlayer.Character.HumanoidRootPart.Position - player.Character.HumanoidRootPart.Position).magnitude
+            if distance < closestDistance then
+                closestDistance = distance
+                closestPlayer = otherPlayer
+            end
+        end
     end
-
-    -- Connect the update function to the RenderStepped event
-    game.RunService.RenderStepped:Connect(updateDrawing)
+    return closestPlayer
 end
 
-players.PlayerAdded:Connect(function(player)
-    if player ~= localPlayer then
-        createSelectionBox(player)
+-- Create a function to aim at the closest player
+local function aimAtClosestPlayer()
+    local closestPlayer = findClosestPlayer()
+    if closestPlayer then
+        local character = player.Character
+        local humanoid = character.Humanoid
+        local rootPart = character.HumanoidRootPart
+        local targetPosition = closestPlayer.Character.HumanoidRootPart.Position
+        local direction = (targetPosition - rootPart.Position).unit
+        humanoid.WalkToPoint = rootPart.Position + direction * 10
+    end
+end
+
+-- Listen for right click input
+game:GetService("UserInputService").InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton3 then
+        -- Hold right click to aim at closest player
+        while input.UserInputState == Enum.UserInputState.Begin then
+            aimAtClosestPlayer()
+            wait()
+        end
     end
 end)
-
-for _, player in pairs(players:GetPlayers()) do
-    if player ~= localPlayer then
-        createSelectionBox(player)
-    end
-end
