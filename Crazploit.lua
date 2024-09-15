@@ -1,42 +1,42 @@
+-- Check if the script is running on the client
+if not game:IsClient() then
+    print("Script is not running on the client!")
+    return
+end
+
+-- Check if the game.Players service is available
+if game.Players then
+    print("game.Players service is available")
+else
+    print("game.Players service is not available")
+    return
+end
+
+-- Wait for the PlayerAdded event to ensure the local player is available
+game.Players.PlayerAdded:Wait()
+
 -- Get the local player
 local player = game.Players.LocalPlayer
-
--- Create a function to find the closest player
-local function findClosestPlayer()
-    local closestPlayer = nil
-    local closestDistance = math.huge
-    for _, otherPlayer in pairs(game.Players:GetPlayers()) do
-        if otherPlayer ~= player then
-            local distance = (otherPlayer.Character.HumanoidRootPart.Position - player.Character.HumanoidRootPart.Position).magnitude
-            if distance < closestDistance then
-                closestDistance = distance
-                closestPlayer = otherPlayer
-            end
-        end
-    end
-    return closestPlayer
+if player then
+    print("Local player is available")
+else
+    print("Local player is not available")
+    return
 end
 
--- Create a function to aim at the closest player
-local function aimAtClosestPlayer()
-    local closestPlayer = findClosestPlayer()
-    if closestPlayer then
-        local character = player.Character
-        local humanoid = character.Humanoid
-        local rootPart = character.HumanoidRootPart
-        local targetPosition = closestPlayer.Character.HumanoidRootPart.Position
-        local direction = (targetPosition - rootPart.Position).unit
-        humanoid.WalkToPoint = rootPart.Position + direction * 10
-    end
-end
+-- Example code: Print the local player's username and character
+print("Local player's username: " .. player.Name)
+print("Local player's character: " .. player.Character.Name)
 
--- Listen for right click input
-game:GetService("UserInputService").InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton3 then
-        -- Hold right click to aim at closest player
-        while input.UserInputState == Enum.UserInputState.Begin then
-            aimAtClosestPlayer()
-            wait()
-        end
+-- Example code: Get the local player's character's humanoid
+local character = player.Character
+if character then
+    local humanoid = character:FindFirstChild("Humanoid")
+    if humanoid then
+        print("Local player's humanoid: " .. humanoid.Name)
+    else
+        print("Local player's humanoid is not available")
     end
-end)
+else
+    print("Local player's character is not available")
+end
