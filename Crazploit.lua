@@ -1,5 +1,5 @@
 -- Check if the script is running on the client
-if not game:IsClient() then
+if not game:GetService("RunService"):IsClient() then
     print("Script is not running on the client!")
     return
 end
