@@ -34,20 +34,26 @@ end
 
 print("Local player is available!")
 
--- Example code: Print the local player's username and character
-print("Local player's username: " .. player.Name)
-print("Local player's character: " .. player.Character.Name)
+-- Create a function to add a selection box to a humanoid
+local function addSelectionBox(humanoid)
+    -- Create a new SelectionBox object
+    local selectionBox = Instance.new("SelectionBox")
+    selectionBox.Name = "SelectionBox"
+    selectionBox.Parent = humanoid.Parent
 
--- Example code: Get the local player's character's humanoid
-local character = player.Character
-if character then
-    print("Local player's character is available: " .. character.Name)
-    local humanoid = character:FindFirstChild("Humanoid")
-    if humanoid then
-        print("Local player's humanoid is available: " .. humanoid.Name)
-    else
-        print("Local player's humanoid is not available")
+    -- Set the selection box's properties
+    selectionBox.LineWidth = 2
+    selectionBox.Color = Color3.new(1, 1, 1) -- White color
+    selectionBox.Transparency = 0.5
+end
+
+-- Loop through all characters and add a selection box to each humanoid
+for _, player in pairs(game.Players:GetPlayers()) do
+    local character = player.Character
+    if character then
+        local humanoid = character:FindFirstChild("Humanoid")
+        if humanoid then
+            addSelectionBox(humanoid)
+        end
     end
-else
-    print("Local player's character is not available")
 end
