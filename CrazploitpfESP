@@ -1,0 +1,60 @@
+-- Get the Players service
+local Players = game:GetService("Players")
+local camera = workspace.CurrentCamera
+
+-- Print out all players
+print("Players:")
+for _, player in pairs(Players:GetPlayers()) do
+    print("  ", player.Name)
+    
+    -- Create a function to create the BillboardGui and its child objects
+    local function createBillboardGui()
+        -- Check if the player's character has a BillboardGui
+        local character = player.Character
+        local billboardGui = character:FindFirstChild("BillboardGui")
+        
+        -- If not, create a new BillboardGui and its child objects
+        if not billboardGui then
+            billboardGui = Instance.new("BillboardGui")
+            billboardGui.AlwaysOnTop = true
+            billboardGui.Parent = character
+            
+            -- Create a Frame within the BillboardGui
+            local frame = Instance.new("Frame")
+            frame.BackgroundColor3 = Color3.new(1, 1, 1) -- White color
+            frame.BackgroundTransparency = 1 -- Make the background fully transparent
+            frame.Size = UDim2.new(1, 0, 1, 0)
+            frame.Parent = billboardGui
+            
+            -- Add a Stroke to the Frame
+            local stroke = Instance.new("UIStroke")
+            stroke.Color = Color3.new(1, 1, 1) -- White color
+            stroke.Thickness = 2
+            stroke.Parent = frame
+        end
+        
+        -- Create a function to update the BillboardGui size
+        local function updateBillboardSize()
+            while true do
+                local distance = (camera.CFrame.Position - player.Character.HumanoidRootPart.Position).Magnitude
+                if distance < 50 then
+                    billboardGui.Size = UDim2.new(4, 0, 6, 0) -- Big size
+                elseif distance < 125 then
+                    billboardGui.Size = UDim2.new(2, 0, 4, 0) -- Medium size
+                else
+                    billboardGui.Size = UDim2.new(1, 0, 2, 0) -- Small size
+                end
+                wait()
+            end
+        end
+        
+        -- Spawn the update function to run in parallel
+        spawn(updateBillboardSize)
+    end
+    
+    -- Check every 5 seconds if the player's character has a BillboardGui
+    while true do
+        createBillboardGui()
+        wait(5)
+    end
+end
