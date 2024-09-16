@@ -18,22 +18,6 @@ end
 
 print("game.Players service is available!")
 
--- Wait for the PlayerAdded event to ensure the local player is available
--- game.Players.PlayerAdded:Wait()
-
-print("Waiting for local player...")
-
--- Get the local player
-local player = game.Players.LocalPlayer
-if player then
-    print("Local player is available: " .. player.Name)
-else
-    print("Local player is not available")
-    return
-end
-
-print("Local player is available!")
-
 -- Create a function to add a selection box to a humanoid
 local function addSelectionBox(humanoid)
     -- Create a new SelectionBox object
@@ -47,7 +31,7 @@ local function addSelectionBox(humanoid)
     selectionBox.Transparency = 0.5
 end
 
--- Loop through all characters and add a selection box to each humanoid
+-- Loop through all players and add a selection box to each humanoid
 for _, player in pairs(game.Players:GetPlayers()) do
     local character = player.Character
     if character then
