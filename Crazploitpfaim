@@ -1,0 +1,96 @@
+-- Check if the script is running on the client
+if not game:GetService("RunService"):IsClient() then
+    print("Script is not running on the client!")
+    return
+end
+
+print("Script is running on the client!")
+
+-- Check if the game.Players service is available
+if game.Players then
+    print("game.Players service is available")
+else
+    print("game.Players service is not available")
+    return
+end
+
+print("game.Players service is available!")
+
+-- Get the UserInputService, the Camera, and the local player
+local userInputService = game:GetService("UserInputService")
+local camera = game.Workspace.CurrentCamera
+local localPlayer = game.Players.LocalPlayer
+
+-- Create a variable to track whether the left-click button is being held down
+local isLeftClickHeldDown = false
+
+-- Print out all players
+print("Players:")
+for _, player in pairs(game.Players:GetPlayers()) do
+    print("  ", player.Name)
+end
+
+-- Create a function to find the closest player
+local function findClosestPlayer()
+    local closestPlayer = nil
+    local closestDistance = math.huge
+
+    -- Loop through all players
+    for _, player in pairs(game.Players:GetPlayers()) do
+        -- Skip the local player
+        if player == localPlayer then
+            continue
+        end
+
+        -- Check if the player has a character
+        if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            -- Calculate the distance between the camera and the player
+            local distance = (camera.CFrame.Position - player.Character.HumanoidRootPart.Position).Magnitude
+
+            -- Update the closest player if the distance is smaller
+            if distance < closestDistance then
+                closestPlayer = player
+                closestDistance = distance
+            end
+        end
+    end
+
+    return closestPlayer
+end
+
+-- Create a function to update the camera position and rotation
+local function updateCameraPosition()
+    -- Find the closest player
+    local closestPlayer = findClosestPlayer()
+
+    -- If a closest player is found, set the camera's CFrame to face them
+    if closestPlayer then
+        print("Following player:", closestPlayer.Name)
+        local characterPosition = closestPlayer.Character.HumanoidRootPart.Position
+        local targetCFrame = CFrame.new(camera.CFrame.Position, characterPosition)
+
+        -- Lerp the camera's CFrame towards the target CFrame
+        camera.CFrame = camera.CFrame:Lerp(targetCFrame, 1.5)
+    end
+end
+
+-- Listen for the left-click button being pressed and released
+userInputService.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton2 then
+        isRightClickHeldDown = true
+    end
+end)
+
+userInputService.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton2 then
+        isRightClickHeldDown = false
+    end
+end)
+
+-- Update the camera position and rotation when the right-click button is being held down
+while true do
+    if isRightClickHeldDown then
+        updateCameraPosition()
+    end
+    wait(0.001) -- Wait 0.001 seconds before checking again
+end
