@@ -18,26 +18,7 @@ end
 
 print("game.Players service is available!")
 
--- Create a function to add a selection box to a humanoid
-local function addSelectionBox(humanoid)
-    -- Create a new SelectionBox object
-    local selectionBox = Instance.new("SelectionBox")
-    selectionBox.Name = "SelectionBox"
-    selectionBox.Parent = humanoid.Parent
-
-    -- Set the selection box's properties
-    selectionBox.LineWidth = 2
-    selectionBox.Color = Color3.new(1, 1, 1) -- White color
-    selectionBox.Transparency = 0.5
-end
-
--- Loop through all players and add a selection box to each humanoid
+-- Loop through all players
 for _, player in pairs(game.Players:GetPlayers()) do
-    local character = player.Character
-    if character then
-        local humanoid = character:FindFirstChild("Humanoid")
-        if humanoid then
-            addSelectionBox(humanoid)
-        end
-    end
+    print("Player found: " .. player.Name)
 end
