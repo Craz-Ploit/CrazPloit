@@ -1,0 +1,2 @@
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Craz-Ploit/CrazPloit/main/CrazploitpfESP"))()
+local Universal = loadstring(game:HttpGet("https://raw.githubusercontent.com/Craz-Ploit/CrazPloit/main/Crazploitpfaim"))()
