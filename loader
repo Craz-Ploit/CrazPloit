@@ -1,2 +1,47 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Craz-Ploit/CrazPloit/main/CrazploitESP"))()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Craz-Ploit/CrazPloit/main/Crazploitpfaim"))()
+--// Defined
+
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main/Library.lua"))()
+local GameId = game.GameId
+
+--// Tables
+
+local Games = {
+    { name = "Phantom Forces", gameid = 113491250, link = "https://raw.githubusercontent.com/dementiaenjoyer/homohack/main/homohack.lua"},
+}
+
+function Fetch(URL)
+    return game:HttpGet(tostring(URL))
+end
+
+--// Rest
+
+for _, Supported in Games do
+    if Supported.gameid == GameId then
+
+        Library:Notify(`SP-Ploit has detected you being in {Supported.name}. But isn't out HOE GET OUT OF here no script yet :)`, 5)
+
+        if Supported.name:find("Phantom") then
+
+            if run_on_actor then
+
+                run_on_actor(game:GetService("ReplicatedFirst")["lol"], [[
+                    loadstring(game:HttpGet("https://raw.githubusercontent.com/"))()
+                ]])
+
+            else
+
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/"))()
+                
+            end
+
+        else
+            loadstring(Fetch(Supported.link))()
+        end
+
+        return "loaded regular"
+
+    end
+end
+
+Library:Notify("You are not in a SP-Ploit supported game, loading universal..")
+loadstring(Fetch("https://raw.githubusercontent.com/"))()
